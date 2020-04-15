@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import mixins, generics
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework import viewsets
 
 from .models import Goods
 from .serializers import GoodsSerializer
@@ -14,11 +15,7 @@ class GoodsPagination(PageNumberPagination):
     max_page_size = 100  # 页面内最大数据量，用来限制pagepage_size_query_param设置的上限
 
 
-class GoodslistView(generics.ListAPIView):
-    """
-    商品列表页
-    """
-    queryset = Goods.objects.all()[:10]
+class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
-
