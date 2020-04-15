@@ -1,18 +1,24 @@
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import mixins, generics
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 
 from .models import Goods
-from .serializers import GoodSerializer
+from .serializers import GoodsSerializer
 
 
-class GoodslistView(APIView):
+class GoodsPagination(PageNumberPagination):
+    ''' 使用自定义的分页类，会覆盖掉setting中PAGINATION的相关配置'''
+    page_size = 5
+    page_size_query_param = 'page_size'
+    page_query_param = 'p'
+    max_page_size = 100  # 页面内最大数据量，用来限制pagepage_size_query_param设置的上限
+
+
+class GoodslistView(generics.ListAPIView):
     """
-    list all goods
+    商品列表页
     """
-    def get(self, request, format=None):
-        goods = Goods.objects.all()[:10]
-        # 当序列化的对象是列表的时候，需要指定many参数，意思是序列化为数组
-        good_serializer = GoodSerializer(goods, many=True)
-        # 使用.data获得序列化之后的数据
-        return Response(good_serializer.data)
+    queryset = Goods.objects.all()[:10]
+    serializer_class = GoodsSerializer
+    pagination_class = GoodsPagination
+
