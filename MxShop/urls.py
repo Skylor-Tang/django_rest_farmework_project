@@ -22,11 +22,14 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 from MxShop.settings import MEDIA_ROOT
-from goods.views import GoodsListViewSet
+from goods.views import GoodsListViewSet, CategoryViewSet
 
 router = DefaultRouter()
 # 配置goods的URL
-router.register(r'goods', GoodsListViewSet)
+router.register(r'goods', GoodsListViewSet, basename='goods')  # 未设置basename的时候，将采用默认的设置，这里goods-list
+
+# 配置category的url
+router.register(r'categorys', CategoryViewSet, basename='categorys')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
