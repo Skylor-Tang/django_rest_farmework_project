@@ -4,6 +4,7 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.authentication import TokenAuthentication
 
 from .models import Goods, GoodsCategory
 from .serializers import GoodsSerializer, CategorySerializer
@@ -25,6 +26,7 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
+    # authentication_classes = (TokenAuthentication,) # goods访问不需要设置token验证
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filter_class = GoodsFilter
     # filterset_fields = ['name', 'shop_price'] # 此时filterset_fields的设置没有效果，去除
