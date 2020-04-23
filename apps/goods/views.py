@@ -26,7 +26,7 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
-    # authentication_classes = (TokenAuthentication,) # goods访问不需要设置token验证
+    # authentication_classes = (TokenAuthentication,) # goods访问不需要权限，属于公共资源，不需要设置token验证
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filter_class = GoodsFilter
     # filterset_fields = ['name', 'shop_price'] # 此时filterset_fields的设置没有效果，去除

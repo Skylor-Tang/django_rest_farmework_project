@@ -21,6 +21,7 @@ import xadmin
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
+from rest_framework_jwt.views import obtain_jwt_token
 
 from MxShop.settings import MEDIA_ROOT
 from goods.views import GoodsListViewSet, CategoryViewSet
@@ -35,7 +36,10 @@ router.register(r'categorys', CategoryViewSet, basename='categorys')
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # drf自带的认证模式 post请求
     url(r'^api-token-auth/', views.obtain_auth_token),
+    # djangorestframework-jwt的jwt认证接口 post请求
+    url(r'^login/', obtain_jwt_token),
     url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
     url(r'^', include(router.urls)),
