@@ -25,7 +25,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 from MxShop.settings import MEDIA_ROOT
 from goods.views import GoodsListViewSet, CategoryViewSet
-from users.views import SmsCodeViewset
+from users.views import SmsCodeViewset, UserViewSet
 
 router = DefaultRouter()
 # 配置goods的URL
@@ -37,6 +37,8 @@ router.register(r'categorys', CategoryViewSet, basename='categorys')
 # 配置smscode的url
 router.register(r'codes', SmsCodeViewset, basename='codes')
 
+# 配置users注册的url
+router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),

@@ -10,12 +10,12 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
 
-from .serializers import SmsSializers
+from .serializers import SmsSerializer, UserRegSerializer
 from utils.yunpian import YunPian
 from MxShop.settings import API_KEY
 from .models import VerifyCode
-
 
 User = get_user_model()
 
@@ -24,6 +24,7 @@ class CustomBackend(ModelBackend):
     """
         自定义用户验证
     """
+
     # 重写ModelBackend的authenticate方法，添加用户手机验证
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
@@ -39,7 +40,7 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
     """
     发送短信验证码
     """
-    serializer_class = SmsSializers
+    serializer_class = SmsSerializer
 
     def generate_code(self):
         """
@@ -76,4 +77,48 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             code_record.save()
             return Response({
                 "mobile": mobile
-            }, status=status.HTTP_201_CREATED)   # create 返回的状态码就是201
+            }, status=status.HTTP_201_CREATED)  # create 返回的状态码就是201
+
+
+class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
+    """
+    用户
+    """
+    serializer_class = UserRegSerializer
+    queryset = User.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        """
+        为了完成配合前端实现的 注册完成后即自动登录的要求
+        重载create方法，完成token的返回
+        :param request:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # 重载perform_create方法，使其返回创建的实例对象，这里获取到该返回值
+        user = self.perform_create(serializer)
+        re_dict = serializer.data
+
+        # 分析jwt源码，调用源码组件，完成token的构建
+        payload = jwt_payload_handler(user)
+        # 获取返回的对象serializer.data，并添加token字段，由前端获取到
+        re_dict["token"] = jwt_encode_handler(payload)
+        re_dict["name"] = user.name if user.name else user.username
+        headers = self.get_success_headers(serializer.data)
+
+        # 返回修改后的值
+        return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        """
+        重载该方法，使其返回存储的对象
+        该函数原先只是调用了函数，但是没有返回
+        drf内实现的save()方法默认是返回了当前创建的实例对象的
+        :param serializer:
+        :return:
+        """
+        return serializer.save()
