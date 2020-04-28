@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'corsheaders',
+    'rest_framework.authtoken',
 
 ]
 
@@ -135,6 +136,10 @@ USE_L10N = True
 
 USE_TZ = False
 
+# 自定义auth验证函数
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -153,6 +158,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # rest framework 配置
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',  # 源码已不提供默认的分页类
-    # 'PAGE_SIZE': 3,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+    ]
 }
+
+# JWT 配置
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
+# 手机号码正则表达式
+REGEX_MOBILE = "^1[358]\d{9}$|147\d{8}$|^176\d{8}$"
+
+# 云片网api_key
+API_KEY = "2269abf14879c7fc226204d1f734a27f"
