@@ -19,7 +19,7 @@ class GoodsPagination(PageNumberPagination):
     max_page_size = 100  # 页面内最大数据量，用来限制pagepage_size_query_param设置的上限
 
 
-class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     商品列表页， 分页， 搜索， 过滤， 排序
     """
