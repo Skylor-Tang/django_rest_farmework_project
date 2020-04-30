@@ -9,13 +9,15 @@ from .models import UserFav
 from utils.permissions import IsOwnerOrReadOnly
 
 
-class UserFavViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserFavViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin,
+                     mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
     用户收藏功能
     """
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = UserFavSerializer
+    lookup_field = "goods_id"
 
     def get_queryset(self):
         return UserFav.objects.filter(user=self.request.user)
