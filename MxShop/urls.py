@@ -54,5 +54,5 @@ urlpatterns = [
     url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
     url(r'^', include(router.urls)),
-    url(r'docs/$', include_docs_urls(title='生鲜网站')),
+    url(r'docs/', include_docs_urls(title='生鲜网站')),
 ]

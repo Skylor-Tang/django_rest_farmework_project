@@ -7,10 +7,14 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework.mixins import CreateModelMixin
+from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handler
+from rest_framework import permissions
+from rest_framework import authentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .serializers import SmsSerializer, UserRegSerializer
 from utils.yunpian import YunPian
@@ -80,12 +84,26 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             }, status=status.HTTP_201_CREATED)  # create 返回的状态码就是201
 
 
-class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
+class UserViewSet(CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     用户
     """
     serializer_class = UserRegSerializer
     queryset = User.objects.all()
+    authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+
+    def get_permissions(self):
+        """
+        重写get_permissions方法，完成动态权限给予功能
+        :return:
+        """
+        # self的action属性，只有使用ViewSet方法才有
+        if self.action == "retrieve":
+            return [permissions.IsAuthenticated()]
+        elif self.action == "create":
+            return []
+
+        return []  # 这步骤不能少，if条件之外的也要有返回值
 
     def create(self, request, *args, **kwargs):
         """
@@ -112,6 +130,9 @@ class UserViewSet(CreateModelMixin, viewsets.GenericViewSet):
 
         # 返回修改后的值
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
+
+    def get_object(self):
+        return self.request.user
 
     def perform_create(self, serializer):
         """
