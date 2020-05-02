@@ -6,7 +6,6 @@ from random import choice
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from rest_framework.mixins import CreateModelMixin
 from rest_framework import mixins
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -16,7 +15,7 @@ from rest_framework import permissions
 from rest_framework import authentication
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .serializers import SmsSerializer, UserRegSerializer
+from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
 from utils.yunpian import YunPian
 from MxShop.settings import API_KEY
 from .models import VerifyCode
@@ -40,7 +39,7 @@ class CustomBackend(ModelBackend):
             return None
 
 
-class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
+class SmsCodeViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     发送短信验证码
     """
@@ -84,13 +83,25 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
             }, status=status.HTTP_201_CREATED)  # create 返回的状态码就是201
 
 
-class UserViewSet(CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    用户
+    用户数据相关
     """
-    serializer_class = UserRegSerializer
+    # serializer_class = UserRegSerializer
     queryset = User.objects.all()
     authentication_classes = (JSONWebTokenAuthentication, authentication.SessionAuthentication)
+
+    def get_serializer_class(self):
+        """
+        重写get_serializer_class方法，完成serializer的动态获取
+        :return:
+        """
+        if self.action == "retrieve":
+            return UserDetailSerializer
+        elif self.action == "create":
+            return UserRegSerializer
+
+        return UserDetailSerializer
 
     def get_permissions(self):
         """

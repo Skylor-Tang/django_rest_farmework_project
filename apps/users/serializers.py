@@ -44,6 +44,15 @@ class SmsSerializer(serializers.Serializer):
         return mobile  # 注意，这里一定要返回验证的字段，否则在调用mobile = serializer.validated_data["mobile"]的时候没有值
 
 
+class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    用户详情序列化类（返回用）
+    """
+    class Meta:
+        model = User
+        fields = ("name", "gender", "birthday", "email", "mobile")
+
+
 class UserRegSerializer(serializers.ModelSerializer):
     # code为多余的字段，只做验证，后面去除
     code = serializers.CharField(required=True, write_only=True, max_length=4, min_length=4, label="验证码",
