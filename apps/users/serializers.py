@@ -48,6 +48,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     """
     用户详情序列化类（返回用）
     """
+
     class Meta:
         model = User
         fields = ("name", "gender", "birthday", "email", "mobile")
@@ -75,6 +76,8 @@ class UserRegSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """
         Serializer调用save()方法的时候实际上会调用create()方法完成model实例的创建
+        内部还是重新调用了原先的create方法，然后重新对密码进行了django自带的密文加密方式加密后保存
+        因为这里的用户保存，只是单纯的用户存储，使用的不是密文加密方式。
         :param validated_data:
         :return:
         """
@@ -104,7 +107,8 @@ class UserRegSerializer(serializers.ModelSerializer):
         else:
             raise serializers.ValidationError("验证码错误")
 
-        # 该方法之后是没有使用return 进行返回，所以，使用实例化对象调用 .validated_data["code"]的时候，得到的值是None
+        # 该方法之后是没有使用 return code 进行返回，所以，使用实例化对象调用 .validated_data["code"]的时候，得到的值是None
+        # 一般的该方法是需要返回字段值的，但是由于这里只需要验证的功能，后面也不需要使用到code（设置了为write_only=True），所以没有做返回
 
     def validate(self, attrs):
         """
@@ -118,4 +122,5 @@ class UserRegSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "code", "mobile", "password")  # User表中没有code字段，这里添加是为了方便验证
+        fields = ("username", "code", "mobile",
+                  "password")  # User表中没有code字段，这里添加是为了方便验证,当然也是必须要添加了，因为所有serializer中设置的字段都必须出现在fields中
