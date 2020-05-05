@@ -48,7 +48,6 @@ class UserDetailSerializer(serializers.ModelSerializer):
     """
     用户详情序列化类（返回用）
     """
-
     class Meta:
         model = User
         fields = ("name", "gender", "birthday", "email", "mobile")

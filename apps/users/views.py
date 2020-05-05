@@ -58,6 +58,7 @@ class SmsCodeViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         # 重写create方法
+        # 使用serializer，必须重写create()方法，因为serializers.Serializer只提供了该接口，但是没有实现
         serializer = self.get_serializer(data=request.data)
         # 设置为True之后，在此处出现异常的时候就会直接抛出异常而不继续执行
         # 抛出异常的时候会被drf捕捉到，返回400

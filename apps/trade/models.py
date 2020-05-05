@@ -24,7 +24,7 @@ class ShoppingCart(models.Model):
         unique_together = ("user", "goods")
 
     def __str__(self):
-        return "%s(%d)".format(self.goods.name, self.nums)
+        return "{0}({1})".format(self.goods.name, self.nums)
 
 
 class OrderInfo(models.Model):
@@ -69,7 +69,6 @@ class OrderGoods(models.Model):
     order = models.ForeignKey(OrderInfo, on_delete=models.CASCADE, verbose_name="订单信息", related_name="goods")
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE, verbose_name="商品")
     goods_num = models.IntegerField(default=0, verbose_name="商品数量")
-
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
