@@ -4,16 +4,19 @@
 # @Email   : 
 # @File    : serializers.py
 # @Software: PyCharm
-
+import time
 
 from rest_framework import serializers
 
 from goods.models import Goods
-from .models import ShoppingCart
+from .models import ShoppingCart, OrderInfo
 from goods.serializers import GoodsSerializer
 
 
 class ShopCartDetailSerializer(serializers.ModelSerializer):
+    """
+    专用于显示
+    """
     goods = GoodsSerializer(many=False)
 
     class Meta:
@@ -68,3 +71,40 @@ class ShopCartSerializer(serializers.Serializer):
         instance.nums = validated_data["nums"]
         instance.save()
         return instance
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    # 以下三个字段，设置为只读，不能设置，需要在支付完成之后才能修改
+    pay_status = serializers.CharField(read_only=True)
+    trade_no = serializers.CharField(read_only=True)
+    order_sn = serializers.CharField(read_only=True)
+    pay_time = serializers.DateTimeField(read_only=True)
+
+    def generate_order_sn(self):
+        """
+        用于订单号的生成
+        生成方式： 当前时间+userid+随机数
+        :return:
+        """
+        from random import Random
+        random_ins = Random()
+        order_sn = "{time_str}{userid}{ranstr}".format(time_str=time.strftime("%Y%m%d%H%M%S"),
+                                                       userid=self.context["request"].user.id,
+                                                       ranstr=random_ins.randint(10, 99))
+        return order_sn
+
+    def validate(self, attrs):
+        """
+        添加订单号参数
+        :param attrs:
+        :return:
+        """
+        attrs["order_sn"] = self.generate_order_sn()
+        return attrs
+
+    class Meta:
+        model = OrderInfo
+        fields = "__all__"

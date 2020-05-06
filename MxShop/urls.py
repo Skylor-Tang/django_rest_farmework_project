@@ -26,7 +26,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 from MxShop.settings import MEDIA_ROOT
 from goods.views import GoodsListViewSet, CategoryViewSet
 from users.views import SmsCodeViewset, UserViewSet
-from trade.views import ShoppingCartViewSet
+from trade.views import ShoppingCartViewSet, OrderViewSet
 from user_operation.views import UserFavViewSet, LeavingMessageViewSet, AddressViewSet
 
 router = DefaultRouter()
@@ -53,6 +53,9 @@ router.register(r'address', AddressViewSet, basename='address')
 
 # 购物车
 router.register(r'shopcarts', ShoppingCartViewSet, basename='shopcarts')
+
+# 个人订单
+router.register(r'orders', OrderViewSet, basename='orders')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
