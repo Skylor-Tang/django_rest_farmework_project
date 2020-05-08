@@ -18,6 +18,8 @@ class UserFavViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
         判断某个商品是否已经收藏
     create:
         收藏商品
+    delete:
+        删除收藏
 
     """
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
@@ -34,6 +36,13 @@ class UserFavViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Cr
             return UserFavSerializer
 
         return UserFavSerializer
+
+    # def perform_create(self, serializer):
+    #     # 可以使用信号量机制完成该操作
+    #     instance = serializer.save()
+    #     goods = instance.goods
+    #     goods.fav_num += 1
+    #     goods.save()
 
 
 class LeavingMessageViewSet(mixins.ListModelMixin, mixins.DestroyModelMixin, mixins.CreateModelMixin,
