@@ -28,6 +28,9 @@ class GoodsCategoryAdmin(object):
 
 
 class GoodsBrandAdmin(object):
+    """
+    品牌设置
+    """
     list_display = ["category", "image", "name", "desc"]
 
     def get_context(self):

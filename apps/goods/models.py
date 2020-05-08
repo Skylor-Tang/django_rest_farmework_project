@@ -39,7 +39,7 @@ class GoodsCategoryBrand(models.Model):
     category = models.ForeignKey(GoodsCategory, on_delete=models.CASCADE, related_name='brands', null=True, blank=True, verbose_name="商品类目")
     name = models.CharField(default="", max_length=30, verbose_name="品牌名", help_text="品牌名")
     desc = models.TextField(default="", max_length=200, verbose_name="品牌描述", help_text="品牌描述")
-    image = models.ImageField(max_length=200, upload_to="brands/")
+    image = models.ImageField(max_length=200, upload_to="brands/", verbose_name="品牌图标图片")
     add_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
 
     class Meta:
