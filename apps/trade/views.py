@@ -19,7 +19,7 @@ class ShoppingCartViewSet(viewsets.ModelViewSet):
     create:
         加入购物车
     delete:
-        删除购物记录
+        删除购物车物品
     update:
         更新记录
     """
@@ -27,6 +27,30 @@ class ShoppingCartViewSet(viewsets.ModelViewSet):
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     lookup_field = "goods_id"  # 使用商品作为查询字段
+
+    def perform_create(self, serializer):
+        # 重写，购置商品的时候减少库存
+        shop_cart = serializer.save()
+        goods = shop_cart.goods
+        goods.goods_num -= shop_cart.nums
+        goods.save()
+
+    def perform_destroy(self, instance):
+        # 重写， 删除购物车中的商品的时候返还库存
+        goods = instance.goods
+        goods.goods_num += instance.nums
+        goods.save()
+        instance.delete()  # 这里注意操作顺序，删除放在最后，因为需要用到删除的数据
+
+    def perform_update(self, serializer):
+        # 重写， 修改数量的时候，动态改变库存数
+        existed_record = ShoppingCart.objects.get(id=serializer.instance.id)
+        existed_nums = existed_record.nums
+        saved_record = serializer.save()
+        nums = saved_record.nums - existed_record.nums
+        goods = saved_record.goods
+        goods.goods_num -= nums
+        goods.save()
 
     def get_serializer_class(self):
         if self.action == "list":

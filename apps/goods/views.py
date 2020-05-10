@@ -5,6 +5,8 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.authentication import TokenAuthentication
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 from .models import Goods, GoodsCategory, Banner
 from .serializers import GoodsSerializer, CategorySerializer, BannerSerializer, IndexCategorySerializer
@@ -19,10 +21,11 @@ class GoodsPagination(PageNumberPagination):
     max_page_size = 100  # 页面内最大数据量，用来限制pagepage_size_query_param设置的上限
 
 
-class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     商品列表页， 分页， 搜索， 过滤， 排序
     """
+    # throttle_classes = (UserRateThrottle, AnonRateThrottle)  # 限速设置
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
@@ -39,7 +42,6 @@ class GoodsListViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewset
         instance.save()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
 
 
 class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

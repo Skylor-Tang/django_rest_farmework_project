@@ -155,14 +155,38 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
-# rest framework 配置
-
+# rest_framework 配置
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.AutoSchema',
+    # 以下是 throttling 的配置
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '1000/day',
+        'user': '1000/day'
+    }
+}
+
+# rest_framework_extensions 配置
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 100
+}
+
+# Django 缓存配置 ： 使用 django-redis 时使用的设置
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
 
 # JWT 配置
