@@ -28,7 +28,7 @@ SECRET_KEY = 'v!w6%5y26syg34ner)0ly)z#n=ewd2otax)6%awvx^fys=*eri'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'users.UserProfile'
 
 
@@ -98,7 +98,7 @@ DATABASES = {
         'NAME': "mxshop",
         'USER': 'root',
         'PASSWORD': "739230854tmj",
-        'HOST': "127.0.0.1",
+        'HOST': "39.106.84.56",
         'OPTIONS': { 'init_command': 'SET default_storage_engine=INNODB;' }
     }
 }
