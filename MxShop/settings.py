@@ -175,6 +175,7 @@ REST_FRAMEWORK = {
 
 # rest_framework_extensions 配置
 REST_FRAMEWORK_EXTENSIONS = {
+    # 缓存过期时间
     'DEFAULT_CACHE_RESPONSE_TIMEOUT': 100
 }
 

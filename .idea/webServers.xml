@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="1c6920b5-d714-4636-9430-bc9eb1f3d290" name="MxShop">
+        <fileTransfer accessType="SFTP" host="39.106.84.56" port="22" sshConfigId="91427732-0d65-4f37-9c84-9827183cad99" sshConfig="root@39.106.84.56:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
