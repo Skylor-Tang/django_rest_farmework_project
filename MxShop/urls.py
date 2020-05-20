@@ -28,6 +28,8 @@ from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet, IndexC
 from users.views import SmsCodeViewset, UserViewSet
 from trade.views import ShoppingCartViewSet, OrderViewSet
 from user_operation.views import UserFavViewSet, LeavingMessageViewSet, AddressViewSet
+from django.views.generic import TemplateView
+
 
 router = DefaultRouter()
 # 配置goods的URL
@@ -69,9 +71,15 @@ urlpatterns = [
     # drf自带的认证模式 post请求
     url(r'^api-token-auth/', views.obtain_auth_token),
     # djangorestframework-jwt的jwt认证接口 post请求
-    url(r'^login/', obtain_jwt_token),
+    url(r'^login/$', obtain_jwt_token),
     url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
     url(r'^', include(router.urls)),
     url(r'docs/', include_docs_urls(title='生鲜网站')),
+
+    # 第三方登录 social_django 配置
+    url('', include('social_django.urls', namespace='social')),
+
+    # vue 前端首页跳转
+    url(r'^index/', TemplateView.as_view(template_name="index.html"), name="index"),
 ]

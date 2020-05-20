@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'corsheaders',
     'rest_framework.authtoken',
+    'social_django',
 
 ]
 
@@ -73,7 +74,7 @@ ROOT_URLCONF = 'MxShop.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,6 +82,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # social_django 配置
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -139,6 +143,10 @@ USE_TZ = False
 # 自定义auth验证函数
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
+    'social_core.backends.weibo.WeiboOAuth2',
+    'social_core.backends.qq.QQOAuth2',
+    'social_core.backends.weixin.WeixinOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 # Static files (CSS, JavaScript, Images)
@@ -146,6 +154,7 @@ AUTHENTICATION_BACKENDS = (
 
 STATIC_URL = '/static/'
 
+# 静态文件配置
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
@@ -183,7 +192,7 @@ REST_FRAMEWORK_EXTENSIONS = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://:739230854@127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -202,3 +211,10 @@ REGEX_MOBILE = "^1[358]\d{9}$|147\d{8}$|^176\d{8}$"
 
 # 云片网api_key
 API_KEY = "2269abf14879c7fc226204d1f734a27f"
+
+# 微博第三方认证应用信息
+SOCIAL_AUTH_WEIBO_KEY = '2011318855'
+SOCIAL_AUTH_WEIBO_SECRET = '405ae53b8fc2703a52770f985e9035aa'
+
+# secial_django 配置文件
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index/'

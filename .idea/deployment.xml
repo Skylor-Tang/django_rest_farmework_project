@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="MxShop">
+  <component name="PublishConfigData" autoUpload="Always">
     <serverData>
       <paths name="MxShop">
         <serverdata>
@@ -9,6 +9,14 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="root@39.106.84.56:22 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/root/projects/MxShop" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

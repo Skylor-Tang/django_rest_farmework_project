@@ -26,7 +26,7 @@ class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin, mixins.Retriev
     商品列表页， 分页， 搜索， 过滤， 排序
     """
     # throttle_classes = (UserRateThrottle, AnonRateThrottle)  # 限速设置
-    queryset = Goods.objects.all()
+    queryset = Goods.objects.all().order_by("id")  # 添加排序，防止出现 UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'goods.models.Goods'> QuerySet. 警告
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
     # authentication_classes = (TokenAuthentication,) # goods访问不需要权限，属于公共资源，不需要设置token验证
