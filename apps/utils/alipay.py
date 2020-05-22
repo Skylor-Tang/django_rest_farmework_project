@@ -139,8 +139,13 @@ class AliPay:
         sign = encodebytes(signature).decode("utf8").replace("\n", "")
         return sign
 
-    def _verify(self, raw_content, signature):
-        # 开始计算签名
+    def _custom_verify(self, raw_content, signature):
+        """
+        签名计算以及验证
+        :param raw_content: 计算签名的完整格式的参数
+        :param signature:  返回的签名
+        :return:
+        """
         key = self.alipay_public_key
         signer = PKCS1_v1_5.new(key)
         digest = SHA256.new()
@@ -149,18 +154,23 @@ class AliPay:
             return True
         return False
 
-    def verify(self, data, signature):
+    def custom_verify(self, data, signature):
+        """
+        验证支付宝付支付成功后的返回请求是否被篡改
+        实际上是一个使用公钥验证签名是否被篡改的过程 根据官方文档要求进行构建 https://opendocs.alipay.com/open/200/106120
+        :param data: 去除sign的返回值字典
+        :param signature: 返回的签名
+        :return:
+        """
         if "sign_type" in data:
-            sign_type = data.pop("sign_type")
+            sign_type = data.pop("sign_type")  # 去除参数中的签名类型，文档要求
         # 排序后的字符串
-        unsigned_items = self.ordered_data(data)
-        message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)
-        return self._verify(message, signature)
+        unsigned_items = self.ordered_data(data)  # 对剩余的参数进行排序
+        message = "&".join(u"{}={}".format(k, v) for k, v in unsigned_items)  # 构建请求参数
+        return self._custom_verify(message, signature)  # 调用 _verify() 进行签名计算并验证是否一致。
 
 
 if __name__ == "__main__":
-    return_url = 'http://47.92.87.172:8000/?total_amount=0.01&timestamp=2017-08-15+17%3A15%3A13&sign=jnnA1dGO2iu2ltMpxrF4MBKE20Akyn%2FLdYrFDkQ6ckY3Qz24P3DTxIvt%2BBTnR6nRk%2BPAiLjdS4sa%2BC9JomsdNGlrc2Flg6v6qtNzTWI%2FEM5WL0Ver9OqIJSTwamxT6dW9uYF5sc2Ivk1fHYvPuMfysd90lOAP%2FdwnCA12VoiHnflsLBAsdhJazbvquFP%2Bs1QWts29C2%2BXEtIlHxNgIgt3gHXpnYgsidHqfUYwZkasiDGAJt0EgkJ17Dzcljhzccb1oYPSbt%2FS5lnf9IMi%2BN0ZYo9%2FDa2HfvR6HG3WW1K%2FlJfdbLMBk4owomyu0sMY1l%2Fj0iTJniW%2BH4ftIfMOtADHA%3D%3D&trade_no=2017081521001004340200204114&sign_type=RSA2&auth_app_id=2016080600180695&charset=utf-8&seller_id=2088102170208070&method=alipay.trade.page.pay.return&app_id=2016080600180695&out_trade_no=201702021222&version=1.0'
-
     alipay = AliPay(
         appid="2016102100732808",
         app_notify_url="http://projectsedus.com/",
@@ -170,21 +180,27 @@ if __name__ == "__main__":
         return_url="http://39.106.84.56:8001/"
     )
 
-    o = urlparse(return_url)
-    query = parse_qs(o.query)
-    processed_query = {}
-    ali_sign = query.pop("sign")[0]
-    for key, value in query.items():
-        processed_query[key] = value[0]
-    print(alipay.verify(processed_query, ali_sign))
-
     url = alipay.direct_pay(
         # 订单信息描述  该函数执行后，生成整个请求的完整字符串
         subject="测试订单",
-        out_trade_no="202002021234",  # 订单号
+        out_trade_no="202002021235",  # 订单号
         total_amount=1.1,  # 订单总额
         return_url="http://39.106.84.56:8001/"  # 提供 付款完成之后的回调页面
     )
     re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(
         data=url)  # 使用direct_pay返回的url，构建完整的访问路径，此处使用的接口为沙箱接口
     print(re_url)
+
+    # 做回调验证
+    return_url = 'http://39.106.84.56:8001/?charset=utf-8&out_trade_no=202002021235&method=alipay.trade.page.pay.return&total_amount=1.10&sign=LHHqGQljTRFpOu%2BCPCnA0OcClKFH3wOVuxpu2HAtXibbdx9gwR2R%2BDDJaKzQaZBWJ5DpPIgZs5Zh2vGo5neNKP4BYDhrD4YYLkumnX%2Be%2BlG53xvxb1TQMOZxKKjTDqWpwHvD25GPJh00K7WCvZ2anUuMRt4JdcxXpuyMqSIbGUMT81yccfeCGMZHrtOQvOreWP1WDs923UHabmke6cuw%2F4BEr8jhnO8e9Oe4WD7N%2B6u1e2aojQNB92QMOSlyeOGetJqVLEfuK9K8JJQ5wUCD%2BR%2FSAt7ml2kSxN1U9cgsJIDvMvmNC5skGbrtnCZx1239IZoYWDZGtEX1Rbj%2FxFqmZw%3D%3D&trade_no=2020052222001410920500926725&auth_app_id=2016102100732808&version=1.0&app_id=2016102100732808&sign_type=RSA2&seller_id=2088102180531500&timestamp=2020-05-22+10%3A33%3A49'
+
+    # 以下两个方法，配合完成返回url中参数的获取
+    o = urlparse(return_url)  # urlparse() 负责对返回的url进行解析，返回值的参数都在query属性中 返回值为ParseResult类型
+    query = parse_qs(o.query)  # 调用对象的query属性，所有传递过来的参数都在该属性中，然后使用parse_qs()对属性进行获取，返回值的类型为dict，字典的值为列表类型
+    processed_query = {}
+    ali_sign = query.pop("sign")[0]  # 去除sign值（返回的签名），并保存该值用于签名的对比验证
+    for key, value in query.items():
+        processed_query[key] = value[0]  # 构建去除sign之后所有的参数的字典
+    print(alipay.custom_verify(processed_query, ali_sign))  # 未被篡改，返回true，否则返回false
+
+
