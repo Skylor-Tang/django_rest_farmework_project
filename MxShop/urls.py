@@ -29,6 +29,7 @@ from users.views import SmsCodeViewset, UserViewSet
 from trade.views import ShoppingCartViewSet, OrderViewSet
 from user_operation.views import UserFavViewSet, LeavingMessageViewSet, AddressViewSet
 from django.views.generic import TemplateView
+from trade.views import AliPayView
 
 
 router = DefaultRouter()
@@ -82,4 +83,8 @@ urlpatterns = [
 
     # vue 前端首页跳转
     url(r'^index/', TemplateView.as_view(template_name="index.html"), name="index"),
+
+    # 手动配置，支付宝支付访问的url
+    url(r'^alipay/return/', AliPayView.as_view(), name="alipay"),
+
 ]

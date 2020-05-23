@@ -170,22 +170,31 @@ class AliPay:
         return self._custom_verify(message, signature)  # 调用 _verify() 进行签名计算并验证是否一致。
 
 
+# 订单号生成函数
+def out_trade_no_func():
+    from random import randint
+    out_trade_no = "".join(str(randint(0, 9)) for i in range(13))
+    return out_trade_no
+
+
 if __name__ == "__main__":
     alipay = AliPay(
         appid="2016102100732808",
-        app_notify_url="http://projectsedus.com/",
+        app_notify_url="http://39.106.84.56:8001/alipay/return/",
         app_private_key_path="../trade/keys/private_2048.txt",  # 个人私钥
         alipay_public_key_path="../trade/keys/alipay_key_2048.txt",  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
         debug=True,  # 默认False,
-        return_url="http://39.106.84.56:8001/"
+        return_url="http://39.106.84.56:8001/alipay/return/"
     )
+
+    # 订单号生成
 
     url = alipay.direct_pay(
         # 订单信息描述  该函数执行后，生成整个请求的完整字符串
         subject="测试订单",
-        out_trade_no="202002021235",  # 订单号
+        out_trade_no=out_trade_no_func(),  # 订单号
         total_amount=1.1,  # 订单总额
-        return_url="http://39.106.84.56:8001/"  # 提供 付款完成之后的回调页面
+        # return_url="http://39.106.84.56:8001/alipay/return/"  # 提供 付款完成之后的回调页面  省略，初始化时已经提供
     )
     re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(
         data=url)  # 使用direct_pay返回的url，构建完整的访问路径，此处使用的接口为沙箱接口
@@ -203,4 +212,4 @@ if __name__ == "__main__":
         processed_query[key] = value[0]  # 构建去除sign之后所有的参数的字典
     print(alipay.custom_verify(processed_query, ali_sign))  # 未被篡改，返回true，否则返回false
 
-
+    print(out_trade_no_func())

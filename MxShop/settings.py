@@ -218,3 +218,7 @@ SOCIAL_AUTH_WEIBO_SECRET = '405ae53b8fc2703a52770f985e9035aa'
 
 # secial_django 配置文件
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/index/'
+
+# 支付宝相关配置
+app_private_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/private_2048.txt')  # 使用该方法拼凑完整的绝对文件路径
+alipay_public_key_path = os.path.join(BASE_DIR, 'apps/trade/keys/alipay_key_2048.txt')
