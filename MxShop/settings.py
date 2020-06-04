@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
 SECRET_KEY = 'v!w6%5y26syg34ner)0ly)z#n=ewd2otax)6%awvx^fys=*eri'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False  # 设置为False之后为生产环境，此时不再提供静态文件服务，需要手动配置
 
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'users.UserProfile'
@@ -153,11 +153,16 @@ AUTHENTICATION_BACKENDS = (
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+# 设置 DEBUG=False 之后，需要手动设置静态文件的访问路径，Django不再提供静态文件的代理服务
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# 静态文件配置
+# 静态文件配置（进限在开发过程中，DEBUG设置为True时，此时使用Django自带的服务器进行测试，Django提供的静态文件服务），
+# 在生产环境下需要注释掉，改用 STATIC_ROOT 设置
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+
 # 设置上传文件存储路径，从前端后后台生成的产品图均会存到这里（对应model中image字段upload_to指定的上传路径）
 MEDIA_URL = "/media/"
 
