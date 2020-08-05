@@ -89,11 +89,11 @@ class OrderSerializer(serializers.ModelSerializer):
     def get_alipay_url(self, obj):  # 使用的时候必须使用 get_ 作为前缀，serializerMethodField在运行的时候会自动找到该字段
         alipay = AliPay(
             appid="2016102100732808",
-            app_notify_url="http://39.106.84.56:8001/alipay/return/",
+            app_notify_url="http://shop.skylor.top/alipay/return/",
             app_private_key_path=app_private_key_path,  # 个人私钥
             alipay_public_key_path=alipay_public_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
             debug=True,  # 默认False,表示为线上模式
-            return_url="http://39.106.84.56:8001/alipay/return/"
+            return_url="http://shop.skylor.top/alipay/return/"
         )
 
         url = alipay.direct_pay(
@@ -147,11 +147,11 @@ class OrderDetailSerializer(serializers.ModelSerializer):
     def get_alipay_url(self, obj):  # 使用的时候必须使用 get_ 作为前缀，serializerMethodField在运行的时候会自动找到该字段
         alipay = AliPay(
             appid="2016102100732808",
-            app_notify_url="http://39.106.84.56:8001/alipay/return/",
+            app_notify_url="http://shop.skylor.top/alipay/return/",
             app_private_key_path=app_private_key_path,  # 个人私钥
             alipay_public_key_path=alipay_public_key_path,  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
             debug=True,  # 默认False,表示为线上模式
-            return_url="http://39.106.84.56:8001/alipay/return/"
+            return_url="http://shop.skylor.top/alipay/return/"
         )
 
         url = alipay.direct_pay(

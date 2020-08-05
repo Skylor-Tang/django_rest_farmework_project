@@ -180,11 +180,11 @@ def out_trade_no_func():
 if __name__ == "__main__":
     alipay = AliPay(
         appid="2016102100732808",
-        app_notify_url="http://39.106.84.56:8001/alipay/return/",
+        app_notify_url="http://shop.skylor.top/alipay/return/",
         app_private_key_path="../trade/keys/private_2048.txt",  # 个人私钥
         alipay_public_key_path="../trade/keys/alipay_key_2048.txt",  # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
         debug=True,  # 默认False,
-        return_url="http://39.106.84.56:8001/alipay/return/"
+        return_url="http://shop.skylor.top/alipay/return/"
     )
 
     # 订单号生成
@@ -194,14 +194,14 @@ if __name__ == "__main__":
         subject="测试订单",
         out_trade_no=out_trade_no_func(),  # 订单号
         total_amount=1.1,  # 订单总额
-        # return_url="http://39.106.84.56:8001/alipay/return/"  # 提供 付款完成之后的回调页面  省略，初始化时已经提供
+        # return_url="http://shop.skylor.top/alipay/return/"  # 提供 付款完成之后的回调页面  省略，初始化时已经提供
     )
     re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(
         data=url)  # 使用direct_pay返回的url，构建完整的访问路径，此处使用的接口为沙箱接口
     print(re_url)
 
     # 做回调验证
-    return_url = 'http://39.106.84.56:8001/?charset=utf-8&out_trade_no=202002021235&method=alipay.trade.page.pay.return&total_amount=1.10&sign=LHHqGQljTRFpOu%2BCPCnA0OcClKFH3wOVuxpu2HAtXibbdx9gwR2R%2BDDJaKzQaZBWJ5DpPIgZs5Zh2vGo5neNKP4BYDhrD4YYLkumnX%2Be%2BlG53xvxb1TQMOZxKKjTDqWpwHvD25GPJh00K7WCvZ2anUuMRt4JdcxXpuyMqSIbGUMT81yccfeCGMZHrtOQvOreWP1WDs923UHabmke6cuw%2F4BEr8jhnO8e9Oe4WD7N%2B6u1e2aojQNB92QMOSlyeOGetJqVLEfuK9K8JJQ5wUCD%2BR%2FSAt7ml2kSxN1U9cgsJIDvMvmNC5skGbrtnCZx1239IZoYWDZGtEX1Rbj%2FxFqmZw%3D%3D&trade_no=2020052222001410920500926725&auth_app_id=2016102100732808&version=1.0&app_id=2016102100732808&sign_type=RSA2&seller_id=2088102180531500&timestamp=2020-05-22+10%3A33%3A49'
+    return_url = 'http://shop.skylor.top/?charset=utf-8&out_trade_no=202002021235&method=alipay.trade.page.pay.return&total_amount=1.10&sign=LHHqGQljTRFpOu%2BCPCnA0OcClKFH3wOVuxpu2HAtXibbdx9gwR2R%2BDDJaKzQaZBWJ5DpPIgZs5Zh2vGo5neNKP4BYDhrD4YYLkumnX%2Be%2BlG53xvxb1TQMOZxKKjTDqWpwHvD25GPJh00K7WCvZ2anUuMRt4JdcxXpuyMqSIbGUMT81yccfeCGMZHrtOQvOreWP1WDs923UHabmke6cuw%2F4BEr8jhnO8e9Oe4WD7N%2B6u1e2aojQNB92QMOSlyeOGetJqVLEfuK9K8JJQ5wUCD%2BR%2FSAt7ml2kSxN1U9cgsJIDvMvmNC5skGbrtnCZx1239IZoYWDZGtEX1Rbj%2FxFqmZw%3D%3D&trade_no=2020052222001410920500926725&auth_app_id=2016102100732808&version=1.0&app_id=2016102100732808&sign_type=RSA2&seller_id=2088102180531500&timestamp=2020-05-22+10%3A33%3A49'
 
     # 以下两个方法，配合完成返回url中参数的获取
     o = urlparse(return_url)  # urlparse() 负责对返回的url进行解析，返回值的参数都在query属性中 返回值为ParseResult类型

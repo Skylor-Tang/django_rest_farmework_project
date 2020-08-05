@@ -9,7 +9,7 @@
 def get_auth_url():
     # 请求用户授权
     weibo_auth_url = 'https://api.weibo.com/oauth2/authorize'
-    redirect_url = 'http://39.106.84.56:8001/complete/weibo/'  # 授权回调地址
+    redirect_url = 'http://shop.skylor.top/complete/weibo/'  # 授权回调地址
     auth_url = weibo_auth_url + "?client_id={client_id}&redirect_uri={redirect_url}".format(
         client_id=2011318855, redirect_url=redirect_url
     )
@@ -26,7 +26,7 @@ def get_access_token(code='589446ae85f00446ac231860aaa525c2'):
         "client_secret": "405ae53b8fc2703a52770f985e9035aa",
         "grant_type": "authorization_code",
         "code": code,
-        "redirect_uri": "http://39.106.84.56:8001/complete/weibo/"
+        "redirect_uri": "http://shop.skylor.top/complete/weibo/"
     })
 
 

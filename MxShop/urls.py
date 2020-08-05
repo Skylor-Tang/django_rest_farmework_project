@@ -23,8 +23,8 @@ from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
-from MxShop.settings import MEDIA_ROOT
-from MxShop.settings import STATIC_ROOT
+# from MxShop.settings import MEDIA_ROOT
+# from MxShop.settings import STATIC_ROOT
 from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewSet, IndexCategoryViewSet
 from users.views import SmsCodeViewset, UserViewSet
 from trade.views import ShoppingCartViewSet, OrderViewSet
@@ -74,10 +74,10 @@ urlpatterns = [
     url(r'^api-token-auth/', views.obtain_auth_token),
     # djangorestframework-jwt的jwt认证接口 post请求
     url(r'^login/$', obtain_jwt_token),
-    url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
+    # url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),
 
     # 类似media访问的格式，在部署网站的时候（不使用django自带的服务器就需要），需要手动配置静态文件的访问路由
-    url(r'^static/(?P<path>.*)$', serve, {"document_root": STATIC_ROOT}),
+    # url(r'^static/(?P<path>.*)$', serve, {"document_root": STATIC_ROOT}),
 
     url(r'^', include(router.urls)),
     url(r'docs/', include_docs_urls(title='生鲜网站')),

@@ -126,11 +126,11 @@ class AliPayView(APIView):
 
         alipay = AliPay(
             appid="2016102100732808",
-            app_notify_url="http://39.106.84.56:8001/alipay/return/",
+            app_notify_url="http://shop.skylor.top/alipay/return/",
             app_private_key_path=app_private_key_path,  # 在settings.py中配置路径，使用相对路径
             alipay_public_key_path=alipay_public_key_path,
             debug=True,  # 默认False,
-            return_url="http://39.106.84.56:8001/alipay/return/"
+            return_url="http://shop.skylor.top/alipay/return/"
         )
         verify_re = alipay.custom_verify(process_dict, sign)
 
@@ -170,11 +170,11 @@ class AliPayView(APIView):
 
         alipay = AliPay(
             appid="2016102100732808",
-            app_notify_url="http://39.106.84.56:8001/alipay/return/",
+            app_notify_url="http://shop.skylor.top/alipay/return/",
             app_private_key_path=app_private_key_path,  # 在settings.py中配置路径，使用相对路径
             alipay_public_key_path=alipay_public_key_path,
             debug=True,  # 默认False,
-            return_url="http://39.106.84.56:8001/alipay/return/"
+            return_url="http://shop.skylor.top/alipay/return/"
         )
         verify_re = alipay.custom_verify(process_dict, sign)
 

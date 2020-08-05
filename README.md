@@ -21,7 +21,7 @@
 
 访问：
 由于域名还在备案中暂时不能使用，目前只在后台通过 uWSGI 服务运行项目
-+ Api Root: http://39.106.84.56:8001/ 
-+ 首页： http://39.106.84.56:8001/index
-+ 接口文档：http://39.106.84.56:8001/docs/
++ Api Root: http://shop.skylor.top/ 
++ 首页： http://shop.skylor.top/index
++ 接口文档：http://shop.skylor.top/docs/
 
