@@ -20,7 +20,7 @@
   
 
 访问：
-～～由于域名还在备案中暂时不能使用，目前只在后台通过 uWSGI 服务运行项目～～（已申请成功）
+~~由于域名还在备案中暂时不能使用，目前只在后台通过 uWSGI 服务运行项目~~（已申请成功）
 + Api Root: http://shop.skylor.top/ 
 + 首页： http://shop.skylor.top/index
 + 接口文档：http://shop.skylor.top/docs/
