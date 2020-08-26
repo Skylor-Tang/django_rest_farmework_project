@@ -105,7 +105,7 @@ def do_complete(backend, login, user=None, redirect_name='next',
 
     response = backend.strategy.redirect(url)
     payload = jwt_payload_handler(user)
-    response.set_cookie("name", user.name if user.name else user.username, max_age=24*3600)
+    response.set_cookie("name", user.username, max_age=24*3600)
     response.set_cookie("token", jwt_encode_handler(payload), max_age=24*3600)
     return response
 

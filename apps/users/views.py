@@ -27,7 +27,6 @@ class CustomBackend(ModelBackend):
     """
         自定义用户验证
     """
-
     # 重写ModelBackend的authenticate方法，添加用户手机验证
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
@@ -57,7 +56,7 @@ class SmsCodeViewset(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return "".join(random_str)
 
     def create(self, request, *args, **kwargs):
-        # 重写create方法，覆盖掉CreateModelMixin中的create()方法
+        # 重写create方法, 覆盖掉CreateModelMixin中的create()方法
         serializer = self.get_serializer(data=request.data)
         # 设置为True之后，在此处出现异常的时候就会直接抛出异常而不继续执行
         # 抛出异常的时候会被drf捕捉到，返回400
@@ -143,7 +142,7 @@ class UserViewSet(mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.Retri
         return Response(re_dict, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_object(self):
-        # 此处限定了，无论访问什么pk，都是返回的当前的
+        # 此处限定了，无论访问的pk是什么，返回的都是当前实例
         return self.request.user
 
     def perform_create(self, serializer):
